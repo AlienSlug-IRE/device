@@ -16,6 +16,8 @@
 
 // --------------------------------------------------------------------
 
+var api = 'http://169.254.126.162:3000/'
+
 
 var SerialPort = require('serialport').SerialPort,
     _ = require('underscore'),
@@ -49,7 +51,7 @@ var setSupportOptions = function(name, isSupported) {
     }
     device.config.supports = _.unique(device.config.supports);
     request({
-        uri: 'http://localhost:3000/api/device/' + device.uuid,
+        uri: api + 'api/device/' + device.uuid,
         method: 'put',
         timeout: 2000,
         strictSSL: false,
@@ -152,7 +154,7 @@ var device = {
 var setup = function() {
     var registerDevice = function(cb) {
         request({
-            uri: 'http://localhost:3000/api/device/',
+            uri: api + 'api/device/',
             method: 'post',
             timeout: 2000,
             strictSSL: false,
@@ -165,7 +167,7 @@ var setup = function() {
     };
     var checkRegistered = function(cb) {
         request({
-            uri: 'http://localhost:3000/api/device/' + device.uuid,
+            uri: api + 'api/device/' + device.uuid,
             method: 'get',
             timeout: 2000,
             strictSSL: false,
@@ -185,7 +187,7 @@ var setup = function() {
     };
     var getSupportOptions = function(cb) {
         request({
-            uri: 'http://localhost:3000/api/io/',
+            uri: api + 'api/io/',
             method: 'get',
             timeout: 2000,
             strictSSL: false,
