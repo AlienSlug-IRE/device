@@ -41,12 +41,11 @@ socket.on('do', function(data) {
 });
 
 var triggerDo = function(obj, value){
-    console.log('triggered', obj, value);
     _.each(device.config.config, function(config){
         if(config.on.id === obj._id){
             _.each(config.do, function(does){
                 var isDo = _.findWhere(device.ioConfigs, { _id: does.id });
-                socket.emit('trigger', { channel: device.uuid, settings: isDo });
+                socket.emit('trigger', { channel: device.uuid, settings: isDo, value: value });
                 if(isDo.type === 'io'){
                     serialPort.write(isDo.settings.port);
                 } 
