@@ -38,7 +38,7 @@ var server = http.createServer().listen(9615),
 socket.on('do', function(data) { 
     console.log('Device Commanded', data);
     // triggerDo({ _id: data._id }, data.value);
-    serialPort.write(data.command.value);
+    serialPort.write(data.value);
 });
 
 var triggerDo = function(obj, value){
