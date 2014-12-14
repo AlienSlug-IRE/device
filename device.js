@@ -71,12 +71,12 @@ var setupHardwareListeners = function(){
     });
     monitor.on('add:9025:32822', function(err, devices) {
         setSupportOptions('NFC', true);
-        socket.emit('Report', { uuid: device.uuid, feature: 'Scanner', supported: true });
+        socket.emit('report', { uuid: device.uuid, feature: 'Scanner', supported: true });
         return serialListener();
     });
     monitor.on('remove:9025:32822', function(err, devices) {
         setSupportOptions('NFC', false);
-        socket.emit('Report', { uuid: device.uuid, feature: 'Scanner', supported: false });
+        socket.emit('report', { uuid: device.uuid, feature: 'Scanner', supported: false });
         return serialPort.close();
     });
 }
