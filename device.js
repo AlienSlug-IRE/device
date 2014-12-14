@@ -17,7 +17,7 @@
 // --------------------------------------------------------------------
 
 var api = 'http://169.254.126.162:3000/'
-var usb_mount = '/dev/mmcblk0p1';
+var usb_mount =  '/dev/ttyACM0'; // '/dev/tty.usbmodemfd1411';
 
 var SerialPort = require('serialport').SerialPort,
     _ = require('underscore'),
@@ -27,7 +27,6 @@ var SerialPort = require('serialport').SerialPort,
     monitor = require('usb-detection');
 
 var triggerDo = function(obj, value){
-    console.log('trigger', obj, value);
     _.each(device.config.config, function(config){
         if(config.on.id === obj._id){
             _.each(config.do, function(does){
@@ -72,12 +71,12 @@ var setupHardwareListeners = function(){
     });
     monitor.on('add:9025:32822', function(err, devices) {
         setSupportOptions('NFC', true);
-        socket.emit('report', { uuid: device.uuid, feature: 'Scanner', supported: true });
+        socket.emit('report', { uuid: device.uuid, feature: 'NFC', supported: true });
         return serialListener();
     });
     monitor.on('remove:9025:32822', function(err, devices) {
         setSupportOptions('NFC', false);
-        socket.emit('report', { uuid: device.uuid, feature: 'Scanner', supported: false });
+        socket.emit('report', { uuid: device.uuid, feature: 'NFC', supported: false });
         return serialPort.close();
     });
 }
@@ -94,22 +93,21 @@ function serialListener() {
         serialPort.on('error', function(data) {
             console.log('error');
         });
-        // serialPort.on('data', function(data) {
-        //     console.log(data);
-        //     clearInterval(spInt);
-        //     receivedStr += data.toString().trim();
-        //     receivedStr = receivedStr.replace(/(\r\n|\n|\r|\s)/gm, "");
-        //     spInt = setTimeout(function() {
-        //         try {
-        //             var rfid = receivedStr.split('Classic')[1].split('No')[0];
-        //             var isOn = _.findWhere(device.ioConfigs, { name: 'NFC' });
-        //             if(!_.isEmpty(isOn)){
-        //                 triggerDo(isOn, rfid);
-        //             }
-        //         } catch (err) {}
-        //         receivedStr = '';
-        //     }, 500);
-        // });
+        serialPort.on('data', function(data) {
+            clearInterval(spInt);
+            receivedStr += data.toString().trim();
+            receivedStr = receivedStr.replace(/(\r\n|\n|\r|\s)/gm, "");
+            spInt = setTimeout(function() {
+                try {
+                    var rfid = receivedStr.split('Classic')[1].split('No')[0];
+                    var isOn = _.findWhere(device.ioConfigs, { name: 'NFC' });
+                    if(!_.isEmpty(isOn)){
+                        triggerDo(isOn, rfid);
+                    }
+                } catch (err) {}
+                receivedStr = '';
+            }, 500);
+        });
         serialPort.write('0');
     });
 
