@@ -27,6 +27,7 @@ var SerialPort = require('serialport').SerialPort,
     monitor = require('usb-detection');
 
 var triggerDo = function(obj, value){
+    console.log('trigger', obj, value);
     _.each(device.config.config, function(config){
         if(config.on.id === obj._id){
             _.each(config.do, function(does){
@@ -92,6 +93,7 @@ function serialListener() {
     serialPort.open(function() {
         serialPort.on('error', function(data) {});
         serialPort.on('data', function(data) {
+            console.log(data);
             clearInterval(spInt);
             receivedStr += data.toString().trim();
             receivedStr = receivedStr.replace(/(\r\n|\n|\r|\s)/gm, "");
