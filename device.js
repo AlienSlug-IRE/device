@@ -17,7 +17,7 @@
 // --------------------------------------------------------------------
 
 var api = 'http://169.254.126.162:3000/'
-var usb_mount =  '/dev/ttyACM0'; // '/dev/tty.usbmodemfd1411';
+var usb_mount =  '/dev/tty.usbmodemfd1411'; //'/dev/ttyACM0';
 
 var SerialPort = require('serialport').SerialPort,
     _ = require('underscore'),
@@ -26,7 +26,21 @@ var SerialPort = require('serialport').SerialPort,
     spInt, 
     monitor = require('usb-detection');
 
+var request = require('request'),
+    http = require('http'),
+    async = require('async');
+
+var server = http.createServer().listen(9615),
+    io = require('socket.io-client'),
+    socket = io.connect(api, {reconnect: true});
+
+socket.on('do', function(data) { 
+    console.log('Device Commanded', data);
+    triggerDo({ _id: data._id }, data.value);
+});
+
 var triggerDo = function(obj, value){
+    console.log('triggered', obj, value);
     _.each(device.config.config, function(config){
         if(config.on.id === obj._id){
             _.each(config.do, function(does){
@@ -34,9 +48,7 @@ var triggerDo = function(obj, value){
                 socket.emit('trigger', { channel: device.uuid, settings: isDo });
                 if(isDo.type === 'io'){
                     serialPort.write(isDo.settings.port);
-                } else {
-                    // DO API TRIGGER
-                }
+                } 
             });
         }
     });
@@ -131,15 +143,10 @@ function serialListener() {
 
 // --------------------------------------------------------------------
 
-var request = require('request'),
-    http = require('http'),
-    async = require('async');
 
-var server = http.createServer().listen(9615);
-
-var io = require('socket.io-client');
-var socket = io.connect(api, {reconnect: true});
-socket.on('connect', function(socket) { });
+socket.on('connect', function(socket) {
+    console.log('Socket Established');
+});
 
 
 
@@ -208,7 +215,6 @@ var setup = function() {
     var tasks = [checkRegistered, getSupportOptions];
     async.series(tasks, function(err, results) {
         console.log('Device Running');
-        console.log(err, results);
         if (err) {
             registerDevice(function(res) {
                 device.uuid = res.device._id;
@@ -217,6 +223,7 @@ var setup = function() {
             })
         } else {
             socket.emit('subscribe', { channel: device.uuid });
+
             setupHardwareListeners();
             setTimeout(setup, 100000);
         }
