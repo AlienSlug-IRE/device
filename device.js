@@ -17,7 +17,8 @@
 // --------------------------------------------------------------------
 
 var api = 'http://169.254.126.162:3000/'
-var usb_mount =  '/dev/tty.usbmodemfd1411'; //'/dev/ttyACM0';
+// var usb_mount =  '/dev/tty.usbmodemfd1411';
+var usb_mount =  '/dev/ttyACM0';
 
 var SerialPort = require('serialport').SerialPort,
     _ = require('underscore'),
