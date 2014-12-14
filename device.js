@@ -41,17 +41,18 @@ socket.on('do', function(data) {
 });
 
 var triggerDo = function(obj, value){
-    _.each(device.config.config, function(config){
-        if(config.on.id === obj._id){
-            _.each(config.do, function(does){
-                var isDo = _.findWhere(device.ioConfigs, { _id: does.id });
-                socket.emit('trigger', { channel: device.uuid, settings: isDo, value: value });
-                if(isDo.type === 'io'){
-                    serialPort.write(isDo.settings.port);
-                } 
-            });
-        }
-    });
+    socket.emit('trigger', { channel: device.uuid, settings: isDo, value: value });
+    // _.each(device.config.config, function(config){
+    //     if(config.on.id === obj._id){
+    //         _.each(config.do, function(does){
+    //             var isDo = _.findWhere(device.ioConfigs, { _id: does.id });
+    //             socket.emit('trigger', { channel: device.uuid, settings: isDo, value: value });
+    //             if(isDo.type === 'io'){
+    //                 serialPort.write(isDo.settings.port);
+    //             } 
+    //         });
+    //     }
+    // });
 };
 
 var setSupportOptions = function(name, isSupported) {
