@@ -91,23 +91,25 @@ function serialListener() {
         flowControl: true
     });
     serialPort.open(function() {
-        serialPort.on('error', function(data) {});
-        serialPort.on('data', function(data) {
-            console.log(data);
-            clearInterval(spInt);
-            receivedStr += data.toString().trim();
-            receivedStr = receivedStr.replace(/(\r\n|\n|\r|\s)/gm, "");
-            spInt = setTimeout(function() {
-                try {
-                    var rfid = receivedStr.split('Classic')[1].split('No')[0];
-                    var isOn = _.findWhere(device.ioConfigs, { name: 'NFC' });
-                    if(!_.isEmpty(isOn)){
-                        triggerDo(isOn, rfid);
-                    }
-                } catch (err) {}
-                receivedStr = '';
-            }, 500);
+        serialPort.on('error', function(data) {
+            console.log('error');
         });
+        // serialPort.on('data', function(data) {
+        //     console.log(data);
+        //     clearInterval(spInt);
+        //     receivedStr += data.toString().trim();
+        //     receivedStr = receivedStr.replace(/(\r\n|\n|\r|\s)/gm, "");
+        //     spInt = setTimeout(function() {
+        //         try {
+        //             var rfid = receivedStr.split('Classic')[1].split('No')[0];
+        //             var isOn = _.findWhere(device.ioConfigs, { name: 'NFC' });
+        //             if(!_.isEmpty(isOn)){
+        //                 triggerDo(isOn, rfid);
+        //             }
+        //         } catch (err) {}
+        //         receivedStr = '';
+        //     }, 500);
+        // });
         serialPort.write('0');
     });
 
