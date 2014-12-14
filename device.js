@@ -136,10 +136,8 @@ var request = require('request'),
 var server = http.createServer().listen(9615);
 
 var io = require('socket.io-client');
-var socket = io.connect('http://localhost:3000', {reconnect: true});
-socket.on('connect', function(socket) { 
-    
-});
+var socket = io.connect(api, {reconnect: true});
+socket.on('connect', function(socket) { });
 
 
 
