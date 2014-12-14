@@ -205,6 +205,8 @@ var setup = function() {
     };
     var tasks = [checkRegistered, getSupportOptions];
     async.series(tasks, function(err, results) {
+        console.log('Device Running');
+        console.log(err, results);
         if (err) {
             registerDevice(function(res) {
                 device.uuid = res.device._id;
