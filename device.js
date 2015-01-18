@@ -262,6 +262,7 @@ var setup = function() {
             strictSSL: false,
             json: true
         }, function(err, res, body) {
+            console.log(err, body);
             if (body.success && body.device !== null) {
                 device.config = body.device;
                 return cb(false, {
