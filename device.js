@@ -19,8 +19,8 @@ var api = 'http://ubd-odonoghue.rhcloud.com/';
 var socketUrl = 'http://ubd-odonoghue.rhcloud.com:8000'
 // var usb_mount = '/dev/tty.usbmodemfd1411';
 // var usb_mount_led = '/dev/tty.usbmodemfd1431';
-var usb_mount = '/dev/ttyACM0';
-var usb_mount_led = '/dev/ttyACM1';
+var usb_mount = '/dev/ttyUSB0';
+var usb_mount_led = '/dev/ttyUSB1';
 
 var SerialPort = require('serialport').SerialPort,
     _ = require('underscore'),
