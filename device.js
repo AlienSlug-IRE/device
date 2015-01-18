@@ -185,7 +185,7 @@ function serialListener() {
     });
     serialPortLED.open(function(err) {
         serialPortLED.on('error', function(data) {
-            // console.log('LED Error');
+            console.log('LED Error');
             try {
                 serialPortLED.close();
             } catch (err) {}
